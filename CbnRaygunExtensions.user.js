@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CBN Raygun Extensions
 // @namespace    http://www.combeenation.com
-// @version      1.1.12
+// @version      1.1.13
 // @description  Add some combeenation specific extensions to raygun
 // @author       Patrick Ecker, Harrer Michael
 // @match        https://app.raygun.io/*
