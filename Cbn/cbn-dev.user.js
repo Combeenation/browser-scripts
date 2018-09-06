@@ -10,7 +10,7 @@
 // @grant        none
 // ==/UserScript==
 
-var intervalId = window.setInterval(function() {
+const intervalId = window.setInterval(function() {
   if (window.Cbn && Cbn.app && Cbn.app.launched) {
     window.clearInterval(intervalId);
 

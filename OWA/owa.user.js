@@ -10,8 +10,8 @@
 // ==/UserScript==
 window.OWAExtensions = (function() {
   // region private variables
-  var _notificationShown = false;
-  var _tabHasFocus = true;
+  let _notificationShown = false;
+  let _tabHasFocus = true;
   // endregion private variables
 
   // region private functions
@@ -20,7 +20,7 @@ window.OWAExtensions = (function() {
    * @private
    */
   function _checkForUnreadMails() {
-    var query = document.querySelectorAll('._unread_MailFolderTreeNodeView2Mouse_Wa');
+    const query = document.querySelectorAll('._unread_MailFolderTreeNodeView2Mouse_Wa');
 
     // TODO: Maybe improve shown body text by showing the names of the folders with unread mail and the unread
     //       mail count...

@@ -8,9 +8,9 @@
 // ==/UserScript==
 
 (function highlightAllDeployerElements() {
-  var iElements = document.getElementsByTagName('i');
-  for (var i=0, max=iElements.length; i < max; i++) {
-    var iElem = iElements[i];
+  const iElements = document.getElementsByTagName('i');
+  for (let i=0, max=iElements.length; i < max; i++) {
+    const iElem = iElements[i];
     if(iElem && iElem.textContent.lastIndexOf('CD -', 0) === 0) {
       iElem.style.backgroundColor = 'wheat';
       iElem.style.color = 'black';

@@ -16,7 +16,9 @@
     "block-scoped-var": "error",
     "curly": [ "error", "multi-line" ],
     "no-trailing-spaces": [ "warn", { "skipBlankLines": true, "ignoreComments": true } ],
-    "max-len": [ "warn", 120 ]
+    "max-len": [ "warn", 120 ],
+    "no-var": "error",
+    "one-var": [ "error", { "initialized": "never" } ]
   },
   "parserOptions": {
     "sourceType": "script",

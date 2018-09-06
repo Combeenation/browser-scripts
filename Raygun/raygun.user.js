@@ -12,7 +12,7 @@
 // ==/UserScript==
 window.CbnRaygunExtensions = (function() {
   // region private variables
-  var _latestErrorData = {};
+  let _latestErrorData = {};
   // endregion private variables
 
   // region private functions
@@ -38,9 +38,9 @@ window.CbnRaygunExtensions = (function() {
    * @returns {String} Formated string. E.g. "3h 12m 43s 118ms"
    */
   function _getTimeDiffString(date1, date2, minLength) {
-    var diffMs = Math.abs(date1 - date2);
-    var res = '';
-    var diffSec, hours, mins, secs, ms;
+    const diffMs = Math.abs(date1 - date2);
+    let res = '';
+    let diffSec, hours, mins, secs, ms;
 
     minLength = isNaN(minLength) ? 18 : minLength;
 
@@ -72,12 +72,12 @@ window.CbnRaygunExtensions = (function() {
     verbose = (true === verbose);
 
     try {
-      var encryptedDiv = $('<div/>');
-      var sessionLogSpan = $('span.key:contains(sessionLog)').filter(() => $(this).text() === 'sessionLog');
-      var encryptedDivContainer = sessionLogSpan.parent();
-      var log = JSON.parse(sessionLogSpan.next().text());
-      var logLength = log.length;
-      var prevLogDate;
+      const encryptedDiv = $('<div/>');
+      const sessionLogSpan = $('span.key:contains(sessionLog)').filter(() => $(this).text() === 'sessionLog');
+      const encryptedDivContainer = sessionLogSpan.parent();
+      let log = JSON.parse(sessionLogSpan.next().text());
+      const logLength = log.length;
+      let prevLogDate;
 
       // clear previous data
       encryptedDivContainer.find('hr').remove();
@@ -95,8 +95,8 @@ window.CbnRaygunExtensions = (function() {
         log
           .sort(function (x, y) { return (x.sltime - y.sltime); })
           .forEach(function(logEntry, idx, logEntries) {
-            var logDate = new Date(logEntry.sltime);
-            var addDataArgs = (logEntry.sladddata && logEntry.sladddata.args);
+            const logDate = new Date(logEntry.sltime);
+            const addDataArgs = (logEntry.sladddata && logEntry.sladddata.args);
 
             if (0 === idx) {
               encryptedDiv.append($('<p/>', {
@@ -149,9 +149,9 @@ window.CbnRaygunExtensions = (function() {
    * Read encrypted session log from DOM and copy it into the clipboard
    */
   function _copyLogToClipboard() {
-    var logEl = $('span.key:contains(sessionLog)').next();
+    const logEl = $('span.key:contains(sessionLog)').next();
     if (logEl && logEl.length) {
-      var range = document.createRange();
+      const range = document.createRange();
       range.selectNode(logEl[0]);
       window.getSelection().addRange(range);
       if (!document.execCommand('copy')) {
@@ -195,9 +195,9 @@ window.CbnRaygunExtensions = (function() {
    * Updates the format of the shown dates by showing the plain dates (e.g. "25 minutes ago" to "09.03.16 18:20:21")
    */
   function _updateShownDates() {
-    var activeTab = $('.module-tab.is-active');
-    var timeOcurredColIdx = $('th:contains("Time occurred")').index();
-    var errorData;
+    const activeTab = $('.module-tab.is-active');
+    let timeOcurredColIdx = $('th:contains("Time occurred")').index();
+    let errorData;
 
     if (timeOcurredColIdx < 0) {
       timeOcurredColIdx = $('th:contains("Last occurred")').index();
@@ -223,13 +223,13 @@ window.CbnRaygunExtensions = (function() {
     }
 
     errorData.records.forEach(function(record) {
-      var msg = record.message;
+      const msg = record.message;
 
       // Find correct table row by its message
       $('td > a:contains(' + msg + ')')
         .filter(function(idx, el) { return (msg === $(el).text()); })
         .each(function(idx, msgEl) {
-          var date = record.lastOccurred || record.lastImpacted;
+          const date = record.lastOccurred || record.lastImpacted;
 
           if (date) {
             // Update the text of the "Last occurred" column
@@ -261,7 +261,7 @@ window.CbnRaygunExtensions = (function() {
       });
 
       $(document).ready(function() {
-        var emblemEl = $('.raygun-emblem');
+        const emblemEl = $('.raygun-emblem');
 
         // Add "decrypt verbose" button
         emblemEl.append($('<a/>', {

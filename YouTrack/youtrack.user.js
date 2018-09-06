@@ -8,7 +8,7 @@
 // ==/UserScript==
   
 function addGlobalStyle(css) {
-  var head, style;
+  let head, style;
   head = document.getElementsByTagName('head')[0];
   if (!head) return;
   style = document.createElement('style');

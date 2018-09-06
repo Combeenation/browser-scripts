@@ -27,7 +27,7 @@ const HEADER_STYLES =
 </style>`;
 
 function nodeTextMatchesBillable(el) {
-  var nodeValue = el.childNodes[0].nodeValue;
+  const nodeValue = el.childNodes[0].nodeValue;
   return nodeValue && (nodeValue.indexOf(BILLABLE_MATCHER) > 0);
 }
 
@@ -37,16 +37,16 @@ $(HEADER_STYLES).appendTo('head');
   'use strict';
 
   window.setInterval(() => {
-    var $els = $(`span:contains("${ BILLABLE_MATCHER }")`).filter((idx, el) => nodeTextMatchesBillable(el));
-    var $elsInTaskDetails = $els.filter((idx, el) => el.closest('.task-details'));
-    var $billingType = $('.billing-type');
-    var $taskTagTexts = $('.task__tag-text');
+    const $els = $(`span:contains("${ BILLABLE_MATCHER }")`).filter((idx, el) => nodeTextMatchesBillable(el));
+    const $elsInTaskDetails = $els.filter((idx, el) => el.closest('.task-details'));
+    const $billingType = $('.billing-type');
+    const $taskTagTexts = $('.task__tag-text');
     
     $('.title')
       .add($('.x-header-text'))
       .add($('.button-selected-values'))
       .each((idx, el) => {
-        var fn = (nodeTextMatchesBillable(el) ? 'addClass' : 'removeClass');
+        const fn = (nodeTextMatchesBillable(el) ? 'addClass' : 'removeClass');
         $(el)[fn](BILLABLE_CLS);
       });
     
