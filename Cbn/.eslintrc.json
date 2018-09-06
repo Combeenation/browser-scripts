@@ -1,0 +1,6 @@
+{
+  "extends": "./../.eslintrc.json",
+  "globals": {
+    "Cbn": true
+  }
+}

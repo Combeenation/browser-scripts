@@ -10,7 +10,7 @@
 function addGlobalStyle(css) {
   var head, style;
   head = document.getElementsByTagName('head')[0];
-  if (!head) { return; }
+  if (!head) return;
   style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML = css;
@@ -42,6 +42,4 @@ addGlobalStyle(`
 
 .wiki.text h3 {
   font-size: 1.2em !important;
-}
-
-`)
+}`);

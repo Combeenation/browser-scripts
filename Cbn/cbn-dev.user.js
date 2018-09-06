@@ -11,13 +11,13 @@
 // ==/UserScript==
 
 var intervalId = window.setInterval(function() {
-	if (window.Cbn && Cbn.app && Cbn.app.launched) {
-		window.clearInterval(intervalId);
+  if (window.Cbn && Cbn.app && Cbn.app.launched) {
+    window.clearInterval(intervalId);
 
-		if (!Cbn.utils.Log.printLogs) {
-			Cbn.utils.Log.printLog();
-			Cbn.utils.Log.printLogs = true;
-		}
-		Cbn.utils.Log._printSigSloLogs = false;
-	}
+    if (!Cbn.utils.Log.printLogs) {
+      Cbn.utils.Log.printLog();
+      Cbn.utils.Log.printLogs = true;
+    }
+    Cbn.utils.Log._printSigSloLogs = false;
+  }
 }, 100);

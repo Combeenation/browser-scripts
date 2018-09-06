@@ -9,94 +9,90 @@
 // @grant        none
 // ==/UserScript==
 window.OWAExtensions = (function() {
-	"use strict";
+  // region private variables
+  var _notificationShown = false;
+  var _tabHasFocus = true;
+  // endregion private variables
 
-	// region private variables
-	var _notificationShown = false;
-	var _tabHasFocus = true;
-	// endregion private variables
+  // region private functions
+  /**
+   * Checks if there are any unread mails and shows a desktop notification if so
+   * @private
+   */
+  function _checkForUnreadMails() {
+    var query = document.querySelectorAll('._unread_MailFolderTreeNodeView2Mouse_Wa');
 
-	// region private functions
-	/**
-	 * Checks if there are any unread mails and shows a desktop notification if so
-	 * @private
-	 */
-	function _checkForUnreadMails() {
-		var query = document.querySelectorAll('._unread_MailFolderTreeNodeView2Mouse_Wa');
+    // TODO: Maybe improve shown body text by showing the names of the folders with unread mail and the unread
+    //       mail count...
+    if (query.length) {
+      _notify();
+    }
+  }
 
-		// TODO: Maybe improve shown body text by showing the names of the folders with unread mail and the unread
-		//       mail count...
-		if (query.length) {
-			_notify();
-		}
-	}
+  /**
+   * Creates a desktop notification with the given text and handles requesting user permissions etc.
+   *
+   * @param {String} [bodyText="You have at least one unread mail in your Outlook Web App"]
+   */
+  function _notify(bodyText) {
+    bodyText = bodyText || 'You have at least one unread mail in your Outlook Web App';
 
-	/**
-	 * Creates a desktop notification with the given text and handles requesting user permissions etc.
-	 *
-	 * @param {String} [bodyText="You have at least one unread mail in your Outlook Web App"]
-	 */
-	function _notify(bodyText) {
-		var notification;
+    if (_notificationShown || _tabHasFocus) {
+      // Only show the notification once and if tab is currently not open..
+      return;
+    }
 
-		bodyText = bodyText || 'You have at least one unread mail in your Outlook Web App';
+    if (!Notification) {
+      alert('Desktop notifications not available in your browser...');
+      return;
+    }
 
-		if (_notificationShown || _tabHasFocus) {
-			// Only show the notification once and if tab is currently not open..
-			return;
-		}
+    if ('denied' === Notification.permission) {
+      // We need to ask the user for permission
+      Notification.requestPermission(function (permission) {
+        if ('granted' === permission) {
+          _notify(bodyText);
+        }
+      });
+    } else {
+      _notificationShown = true;
+      new Notification('New Mail', {
+        requireInteraction: true,
+        body: bodyText,
+        icon: 'https://devpublic.blob.core.windows.net/tampermonkey/OWAExtensions/notifcation_icon.png'
+      }).onclose = function() {
+        _notificationShown = false;
+      };
+    }
+  }
+  // endregion private functions
 
-		if (!Notification) {
-			alert('Desktop notifications not available in your browser...');
-			return;
-		}
+  // region create ui
+  // endregion create ui
 
-		if ('denied' === Notification.permission) {
-			// We need to ask the user for permission
-			Notification.requestPermission(function (permission) {
-				if ('granted' === permission) {
-					_notify(bodyText);
-				}
-			});
-		} else {
-			_notificationShown = true;
-			new Notification('New Mail', {
-				requireInteraction: true,
-				body: bodyText,
-				icon: 'https://devpublic.blob.core.windows.net/tampermonkey/OWAExtensions/notifcation_icon.png'
-			}).onclose = function() {
-				_notificationShown = false;
-			};
-		}
-	}
-	// endregion private functions
+  // public space
+  return {
+    // region public properties
+    // endregion public properties
 
-	// region create ui
-	// endregion create ui
+    // region public functions
+    /**
+     * Initializes the OWAExtensions module
+     */
+    init: function() {
+      console.warn('Initializing OWAExtensions');
 
-	// public space
-	return {
-		// region public properties
-		// endregion public properties
+      window.setInterval(_checkForUnreadMails, 5000);
 
-		// region public functions
-		/**
-		 * Initializes the OWAExtensions module
-		 */
-		init: function() {
-			console.warn('Initializing OWAExtensions')
+      window.onfocus = function () {
+        _tabHasFocus = true;
+      };
 
-			window.setInterval(_checkForUnreadMails, 5000);
-
-			window.onfocus = function () {
-				_tabHasFocus = true;
-			};
-
-			window.onblur = function () {
-				_tabHasFocus = false;
-			};
-		}
-		// endregion public functions
-	};
+      window.onblur = function () {
+        _tabHasFocus = false;
+      };
+    }
+    // endregion public functions
+  };
 }());
 window.OWAExtensions.init();

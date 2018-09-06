@@ -29,7 +29,7 @@ const HEADER_STYLES =
 function nodeTextMatchesBillable(el) {
   var nodeValue = el.childNodes[0].nodeValue;
   return nodeValue && (nodeValue.indexOf(BILLABLE_MATCHER) > 0);
-};
+}
 
 $(HEADER_STYLES).appendTo('head');
 
