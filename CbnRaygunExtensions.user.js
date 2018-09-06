@@ -8,7 +8,7 @@
 // @match        https://app.raygun.com/*
 // @grant        none
 // @require      https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js
-// @require      https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/jquery-dateFormat.min.js
+// @require      https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/jquery-dateformat.min.js
 // ==/UserScript==
 window.CbnRaygunExtensions = (function() {
 	"use strict";
