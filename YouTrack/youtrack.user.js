@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTrack code formatting
 // @namespace    https://www.combeenation.com
-// @version      0.9
+// @version      0.10
 // @author       Enzi
 // @match        https://combeenation.myjetbrains.com/youtrack/*issue*
 // @grant        none
@@ -33,6 +33,7 @@ addGlobalStyle(`
 
 .wiki.text h1 {
   font-size: 2em !important;
+  text-decoration: underline;
 }
 
 .wiki.text h2 {
