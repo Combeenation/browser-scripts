@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         YouTrack code formatting
 // @namespace    https://www.combeenation.com
-// @version      0.11
+// @version      0.12
 // @author       Enzi
-// @match        https://combeenation.myjetbrains.com/youtrack/*issue*
+// @match        https://combeenation.myjetbrains.com/youtrack/*
 // @grant        none
 // ==/UserScript==
 
