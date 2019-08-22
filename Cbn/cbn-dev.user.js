@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CbnDevUsers
 // @namespace    http://www.combeenation.com
-// @version      0.7.2
+// @version      0.7.3
 // @description  Combeenation dev users script
 // @author       Michael Harrer
 // @match        https://portal.combeenation.com/*
@@ -20,7 +20,8 @@ const intervalId = window.setInterval(function() {
     }
     Cbn.utils.Log._printSigSloLogs = false;
     
-    if (Cbn.Cfgr && Cbn.utils.EnvHelper.inDevEnv && !window.location.href.includes('cbn-no-devenv-mark=')) {
+    const suppressDevEnvMark = window.location.href.includes('cbn-no-devenv-mark=');
+    if (Cbn.Cfgr && Cbn.utils.EnvHelper && Cbn.utils.EnvHelper.inDevEnv && !suppressDevEnvMark) {
       const devEnvMarkHtml = '<div class="devenv-mark"></div>';
       const logoUrl = 'https://raw.githubusercontent.com/Combeenation/browser-scripts/master/Cbn/devenv-mark.png';
       const devEnvMarkStyles = {
