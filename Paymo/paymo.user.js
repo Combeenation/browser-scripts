@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CbnPaymoExtensions
 // @namespace    http://www.combeenation.com
-// @version      1.0.1
+// @version      1.0.2
 // @description  Combeenation extensions for Paymo
 // @author       Michael Harrer
 // @match        https://app.paymoapp.com/
@@ -56,6 +56,20 @@ $(HEADER_STYLES).appendTo('head');
     
     if ($billingType.length) {
       $billingType.css('box-shadow', ($elsInTaskDetails.length ? 'inset 0 0 20px 0px #f96161' : 'none'));
+    }
+    
+    // create issue link
+    const $issueLabel = $('.task-details__code .x6-form-display-field')[0];
+    if ($issueLabel && $issueLabel.childElementCount == 0) {
+      const issueNr = $issueLabel.innerText;
+      const createA = document.createElement('a');
+      const createAText = document.createTextNode(issueNr);
+      createA.setAttribute('href', 'https://app.paymoapp.com/#Paymo.Tasks/' + issueNr.substring(1, issueNr.length));
+      createA.appendChild(createAText);
+      while ($issueLabel.firstChild) {
+        $issueLabel.removeChild($issueLabel.firstChild);
+      }
+      $issueLabel.appendChild(createA);
     }
   }, 2000);
 })();

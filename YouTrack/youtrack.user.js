@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         YouTrack code formatting
 // @namespace    https://www.combeenation.com
-// @version      0.9
+// @version      0.12
 // @author       Enzi
-// @match        https://combeenation.myjetbrains.com/youtrack/*issue*
+// @match        https://combeenation.myjetbrains.com/youtrack/*
 // @grant        none
 // ==/UserScript==
-  
+
 function addGlobalStyle(css) {
   let head, style;
   head = document.getElementsByTagName('head')[0];
@@ -21,8 +21,11 @@ addGlobalStyle(`
 @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
 @import url("https://use.typekit.net/qcy3kpt.css");
 
+.global {
+  font-family: "liberation-sans", Arial !IMPORTANT;
+}
+
 .yt-issue-body__description-common {
-  font-family: "liberation-sans", Arial;
   font-size: 15px !important;
 }
 
@@ -32,11 +35,11 @@ addGlobalStyle(`
 }
 
 .wiki.text h1 {
-  font-size: 2em !important;
+  border-bottom: 2px solid rgba(26, 26, 26, 0.31);
+  padding: 4px 0;
 }
 
 .wiki.text h2 {
-  font-size: 1.5em !important;
   font-weight: 600;
 }
 
