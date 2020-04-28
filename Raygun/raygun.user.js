@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CBN Raygun Extensions
 // @namespace    http://www.combeenation.com
-// @version      1.1.13
+// @version      1.1.14
 // @description  Add some combeenation specific extensions to raygun
 // @author       Patrick Ecker, Harrer Michael
 // @match        https://app.raygun.io/*
@@ -73,7 +73,7 @@ window.CbnRaygunExtensions = (function() {
 
     try {
       const encryptedDiv = $('<div/>');
-      const sessionLogSpan = $('span.key:contains(sessionLog)').filter(() => $(this).text() === 'sessionLog');
+      const sessionLogSpan = $('span.key:contains(sessionLog)');
       const encryptedDivContainer = sessionLogSpan.parent();
       let log = JSON.parse(sessionLogSpan.next().text());
       const logLength = log.length;
@@ -240,6 +240,68 @@ window.CbnRaygunExtensions = (function() {
         });
     });
   }
+  
+  /**
+   * Creates the additional buttons in the header bar ("Decrypt", "Copy Log", ...)
+   */
+  function _createButtons() {
+    const emblemEl = $('.raygun-emblem');
+
+    // Add "decrypt verbose" button
+    emblemEl.append($('<a/>', {
+      'text': 'Decrypt verbose',
+      'class': 'raygun-emblem',
+      'style': 'color: white; position:absolute; left:-335px; top:-8px; width: auto;',
+      'click': _decryptLog
+    }));
+
+    // Add "decrypt" button
+    emblemEl.append($('<a/>', {
+      'text': 'Decrypt',
+      'class': 'raygun-emblem',
+      'style': 'color: white; position:absolute; left:-200px; top:-8px; width: auto;',
+      'click': _decryptLog
+    }));
+
+    // Add "Copy Log" button
+    emblemEl.append($('<a/>', {
+      'text': 'Copy Log',
+      'class': 'raygun-emblem',
+      'style': 'color: white; position:absolute; left:-120px; top:-8px; width: auto;',
+      'click': _copyLogToClipboard
+    }));
+
+    // Add "Update dates" button
+    emblemEl.append($('<a/>', {
+      'text': 'Show full dates',
+      'class': 'raygun-emblem',
+      'style': 'color: white; position:absolute; left:50px; top:-8px; width: 100px;',
+      'click': _updateShownDates
+    }));
+  }
+  
+  /**
+   * Waits for the DOM of the header bar into which our additional buttons are rendered to be ready and calls the
+   * "_createButtons" function afterwards.
+   * 
+   * Uses polling and stops trying after too many unsuccessful attempts (ATM after 40 sec).
+   */
+  function createButtonsAfterDomReady() {
+    let retryCnt = 0;
+    const retryCntMax = 20;
+    
+    function tryCreateButton() {
+      const emblemEl = $('.raygun-emblem');
+      if (emblemEl.length) {
+        _createButtons();
+      } else if (retryCnt < retryCntMax) {
+        retryCnt++;
+        window.setTimeout(tryCreateButton, 2000);
+      }
+    }
+    
+    $(document).ready(tryCreateButton);
+  }
   // endregion private functions
 
   // region create ui
@@ -259,42 +321,8 @@ window.CbnRaygunExtensions = (function() {
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
         jqXHR.done(_onXhrDone);
       });
-
-      $(document).ready(function() {
-        const emblemEl = $('.raygun-emblem');
-
-        // Add "decrypt verbose" button
-        emblemEl.append($('<a/>', {
-          'text': 'Decrypt verbose',
-          'class': 'raygun-emblem',
-          'style': 'color: white; position:absolute; left:-335px; top:-8px; width: auto;',
-          'click': _decryptLog.bind(this, true)
-        }));
-
-        // Add "decrypt" button
-        emblemEl.append($('<a/>', {
-          'text': 'Decrypt',
-          'class': 'raygun-emblem',
-          'style': 'color: white; position:absolute; left:-200px; top:-8px; width: auto;',
-          'click': _decryptLog
-        }));
-
-        // Add "Copy Log" button
-        emblemEl.append($('<a/>', {
-          'text': 'Copy Log',
-          'class': 'raygun-emblem',
-          'style': 'color: white; position:absolute; left:-120px; top:-8px; width: auto;',
-          'click': _copyLogToClipboard
-        }));
-
-        // Add "Update dates" button
-        emblemEl.append($('<a/>', {
-          'text': 'Show full dates',
-          'class': 'raygun-emblem',
-          'style': 'color: white; position:absolute; left:50px; top:-8px; width: 100px;',
-          'click': _updateShownDates
-        }));
-      });
+      
+      createButtonsAfterDomReady();
     }
     // endregion public functions
   };
