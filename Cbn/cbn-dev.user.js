@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         CbnDevUsers
 // @namespace    http://www.combeenation.com
-// @version      0.8.0
+// @version      0.9.0
 // @description  Combeenation dev users script
 // @author       Michael Harrer
-// @match        https://portal.combeenation.com/*
-// @match        https://127.0.0.1:446/*
-// @include      /^https:[/][/]dev\d*[.]combeenation[.]com[/].*/
+// @match        https://*.combeenation.com/*
+// @match        https://127.0.0.1/*
 // @grant        none
 // ==/UserScript==
 
