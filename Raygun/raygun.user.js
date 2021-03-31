@@ -62,6 +62,51 @@ window.CbnRaygunExtensions = (function() {
     return _leftPad(res, minLength);
   }
 
+  function _decryptVerboseNext() {
+    _navigateAndDecryptVerbose('nextOccurrence');
+  }
+
+  function _decryptVerbosePrevious() {
+    _navigateAndDecryptVerbose('previousOccurrence');
+  }
+
+   /**
+   * Clicks on the button, waits until the load animation is gone,
+   * then executes the 'decrypt verbose' and scrolls to the end of the log
+   *
+   * @param {string} btnId Button which should be clicked
+   */
+  function _navigateAndDecryptVerbose(btnId) {
+    try {
+      var nextBtn = $('#' + btnId);
+      if (!nextBtn.length) {
+        alert('Button to simulate click not available!');
+        return;
+      } else if (nextBtn.hasClass('button--disabled')) {
+        alert('Button disabled! End reached?');
+        return;
+      }
+      nextBtn.click();
+
+      var decryptAfterLoad = function(firstLoad) {
+        var loading = document.getElementsByClassName('loading--active');
+        // timeout on first load in case the load-mask takes some time
+        if (loading.length === 0 && !firstLoad) {
+          _decryptLog(true);
+          var decryptedLogEl = document.getElementById('cbn-decrypted-log');
+          var yPos = decryptedLogEl ? decryptedLogEl.scrollHeight : document.body.scrollHeight;
+          window.scrollTo(0, yPos);
+        } else {
+          window.setTimeout(decryptAfterLoad, 100);
+        }
+      };
+
+      decryptAfterLoad(true);
+    } catch(ex) {
+      alert("Error!\n" + ex);
+    }
+  }
+
   /**
    * Read encrypted session log from DOM, decrypt it and print it into a new DIV
    *
@@ -72,8 +117,8 @@ window.CbnRaygunExtensions = (function() {
     verbose = (true === verbose);
 
     try {
-      const encryptedDiv = $('<div/>');
-      const sessionLogSpan = $('span.key:contains(sessionLog)');
+      const encryptedDiv = $('<div/>', { id: 'cbn-decrypted-log' });
+      const sessionLogSpan = $('span.key:contains(sessionLog)').last();
       const encryptedDivContainer = sessionLogSpan.parent();
       let log = JSON.parse(sessionLogSpan.next().text());
       const logLength = log.length;
@@ -240,20 +285,35 @@ window.CbnRaygunExtensions = (function() {
         });
     });
   }
-  
+
   /**
    * Creates the additional buttons in the header bar ("Decrypt", "Copy Log", ...)
    */
   function _createButtons() {
     const emblemEl = $('.raygun-emblem');
 
-    // Add "decrypt verbose" button
-    emblemEl.append($('<a/>', {
-      'text': 'Decrypt verbose',
+	// Add "decrypt verbose" buttons
+    const decryptVerboseWrapper = $('<div/>');
+	decryptVerboseWrapper.append($('<a/>', {
+	  'text': 'Decrypt verbose',
+	  'class': 'raygun-emblem',
+	  'style': 'color: white; position:absolute; left:-335px; top:-8px; width: auto;',
+	  'click': () => _decryptLog(true)
+	}));
+
+    decryptVerboseWrapper.append($('<a/>', {
+      'text': 'Previous',
       'class': 'raygun-emblem',
-      'style': 'color: white; position:absolute; left:-335px; top:-8px; width: auto;',
-      'click': _decryptLog
+      'style': 'color: white; position:absolute; left:-334px; top: 10px; width: auto; font-size: 10px;',
+      'click': _decryptVerbosePrevious
     }));
+    decryptVerboseWrapper.append($('<a/>', {
+      'text': 'Next',
+      'class': 'raygun-emblem',
+      'style': 'color: white; position:absolute; left:-252px; top: 10px; width: auto; font-size: 10px;',
+      'click': _decryptVerboseNext
+    }));
+    emblemEl.append(decryptVerboseWrapper);
 
     // Add "decrypt" button
     emblemEl.append($('<a/>', {
@@ -279,17 +339,17 @@ window.CbnRaygunExtensions = (function() {
       'click': _updateShownDates
     }));
   }
-  
+
   /**
    * Waits for the DOM of the header bar into which our additional buttons are rendered to be ready and calls the
    * "_createButtons" function afterwards.
-   * 
+   *
    * Uses polling and stops trying after too many unsuccessful attempts (ATM after 40 sec).
    */
   function createButtonsAfterDomReady() {
     let retryCnt = 0;
     const retryCntMax = 20;
-    
+
     function tryCreateButton() {
       const emblemEl = $('.raygun-emblem');
       if (emblemEl.length) {
@@ -299,7 +359,7 @@ window.CbnRaygunExtensions = (function() {
         window.setTimeout(tryCreateButton, 2000);
       }
     }
-    
+
     $(document).ready(tryCreateButton);
   }
   // endregion private functions
@@ -321,7 +381,7 @@ window.CbnRaygunExtensions = (function() {
       $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
         jqXHR.done(_onXhrDone);
       });
-      
+
       createButtonsAfterDomReady();
     }
     // endregion public functions
