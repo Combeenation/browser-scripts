@@ -194,7 +194,9 @@ window.CbnRaygunExtensions = (function() {
    * Read encrypted session log from DOM and copy it into the clipboard
    */
   function _copyLogToClipboard() {
-    const logEl = $('span.key:contains(sessionLog)').next();
+    const keyname = 'sessionLog';
+    const foundSpans = $('span.key:contains(' + keyname + ')');
+    const logEl = foundSpans.filter((index, node) => node.innerText === keyname).next();
     if (logEl && logEl.length) {
       const range = document.createRange();
       range.selectNode(logEl[0]);
